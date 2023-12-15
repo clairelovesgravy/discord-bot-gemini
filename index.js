@@ -2,7 +2,6 @@ require ('dotenv').config();
 const { Client, GatewayIntentBits, ChannelType, Partials } = require('discord.js');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fs = require("fs");
-const { addThreadToPair, getOpenaiThreadId} = require('./model');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -15,7 +14,6 @@ async function run (prompt) {
   console.log(text);
   return text;
 }
-
 
 
 const client = new Client({
@@ -37,8 +35,10 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-authorizedUsers = ['1073103866209517618'];
-authorizedChannels = ['1148830641425760259'];
+authorizedUsers = ['1073103866209517618','1074545913260949504'];
+console.log(authorizedUsers);
+authorizedChannels = process.env.AUTHORIZED_CHANNELS.split(',');
+console.log(authorizedChannels);
 
 
 client.on('messageCreate', async (message) => {

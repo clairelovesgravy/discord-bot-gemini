@@ -2,7 +2,7 @@
 FROM node:lts-alpine
 
 # Create a directory to hold the application code inside the image
-WORKDIR /usr/src/bot
+WORKDIR /usr/src/gemini
 
 # Copy the package.json (and package-lock.json, if available) into the image
 COPY package*.json ./
