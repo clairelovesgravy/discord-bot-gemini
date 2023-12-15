@@ -5,15 +5,7 @@ const fs = require("fs");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-async function run (prompt) {
-  // For text-only input, use the gemini-pro model
-  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  console.log(text);
-  return text;
-}
+
 
 
 const client = new Client({
@@ -35,7 +27,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-authorizedUsers = ['1073103866209517618','1074545913260949504'];
+authorizedUsers = process.env.AUTHORIZED_USERS.split(',');
 console.log(authorizedUsers);
 authorizedChannels = process.env.AUTHORIZED_CHANNELS.split(',');
 console.log(authorizedChannels);
@@ -91,6 +83,15 @@ client.on('messageCreate', async (message) => {
   }
 });
 
+async function run (prompt) {
+  // For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  console.log(text);
+  return text;
+}
 
 function splitResponse(response){
   const maxChunkLength = 2000;
