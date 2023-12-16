@@ -1,12 +1,15 @@
 # Discord Bot with Gemini
 
 This project is a Discord bot that integrates with the Gemini API. It allows authorized users to interact with the Gemini API through specific channels in Discord.
+you can get a bot like below:
+![demo](demo.png)
 
 ## Prerequisites
 
 - Node.js
 - npm
 - Docker (optional)
+- discord account
 
 ## Setup
 
@@ -16,6 +19,13 @@ This project is a Discord bot that integrates with the Gemini API. It allows aut
 4. Copy the `.env.example` file to a new file named `.env`.
 5. Replace `your_token` and `your_api_key` in the `.env` file with your Discord token and Gemini API key, respectively.
 6. Replace the user and channel IDs in `AUTHORIZED_USERS` and `AUTHORIZED_CHANNELS` with the IDs of the users and channels that you want to authorize.
+
+## creare a discord bot
+
+1.Have a discord account and visit [discord api platform] (https://discord.com/developers/applications)
+2.New application, specify its basic information.![create](create.png)
+3.switch to bot and enable PUBLIC BOT and MESSAGE CONTENT INTENT. ![permits](permits.png)
+4.direct to Oauth2-URL generator, enable bot and applications.commands in scopes, then chose adminstrator in BOT PERMISSIONS to generate invite link, copy the link below, and open in a new tab, you can invite the bot in your own discord server. ![invite-link](invite.png)
 
 ## Usage
 
