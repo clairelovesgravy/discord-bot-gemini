@@ -10,8 +10,6 @@ COPY package*.json ./
 # Install the dependencies specified in package.json
 RUN npm install
 
-# If you are building your code for production, you can run `npm ci --only=production` instead
-
 # Bundle the app source inside the Docker image
 COPY . .
 

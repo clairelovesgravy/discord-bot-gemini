@@ -13,7 +13,7 @@ you can get a bot like below:
 
 ## creare a discord bot
 
-1.Have a discord account and visit [discord api platform] (https://discord.com/developers/applications)
+1.Have a discord account and visit [discord api platform](https://discord.com/developers/applications)
 2.New application, specify its basic information.![create](create.png)
 3.switch to bot and enable PUBLIC BOT and MESSAGE CONTENT INTENT. ![permits](permits.png)
 4.direct to Oauth2-URL generator, enable bot and applications.commands in scopes, then chose adminstrator in BOT PERMISSIONS to generate invite link, copy the link below, and open in a new tab, you can invite the bot in your own discord server. ![invite-link](invite.png)
@@ -25,6 +25,10 @@ you can get a bot like below:
 3. Install the dependencies by running `npm install`.
 4. Copy the `.env.example` file to a new file named `.env`.
 5. Replace `your_token` and `your_api_key` in the `.env` file with your Discord token and Gemini API key, respectively.
+   you can get your gemini key [here](https://makersuite.google.com/app/apikey)
+   you can get your discord bot token [here](https://discord.com/developers/applications)
+   ![discord_bot_token](token.png)
+
 6. Replace the user and channel IDs in `AUTHORIZED_USERS` and `AUTHORIZED_CHANNELS` with the IDs of the users and channels that you want to authorize.
 
 ## Usage
