@@ -3,8 +3,10 @@ const { Client, GatewayIntentBits, ChannelType, Partials } = require('discord.js
 const fs = require("fs");
 const path = require('path');
 const https = require('https');
-const { runGeminiPro, runGeminiVision} = require('./gemini.js');
+const { runGeminiPro, runGeminiVision, geminiApiKeys} = require('./gemini.js');
 
+let apiCallCount = 0; // keep track of how many times we've used the API
+let currentKeyIndex = 0; // keep track of which key we're using
 
 const client = new Client({
   intents: [
@@ -25,8 +27,8 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-authorizedUsers = process.env.AUTHORIZED_USERS.split(',');
-authorizedChannels = process.env.AUTHORIZED_CHANNELS.split(',');
+const authorizedUsers = process.env.AUTHORIZED_USERS.split(',');
+const authorizedChannels = process.env.AUTHORIZED_CHANNELS.split(',');
 
 
 client.on('messageCreate', async (message) => {
@@ -34,12 +36,21 @@ client.on('messageCreate', async (message) => {
     if(message.author.bot) return;
     if (message.channel.type === ChannelType.DM && authorizedUsers.includes(message.author.id)) 
     {
-      message.reply('Hey there, how can I help you?');
       // generate response from gemini api
       const prompt = message.content;
       try{
-        const response = await runGeminiPro(prompt);
+        const response = await runGeminiPro(prompt, currentKeyIndex);
+        apiCallCount++;
+        // If the API call count reaches 60, switch to the next key
+        if (apiCallCount >= 60) {
+          currentKeyIndex++;
+          apiCallCount = 0;
+         // If the current key index exceeds the length of the keys array, reset it to 0
+          if (currentKeyIndex >= geminiApiKeys.length) {
+            currentKeyIndex = 0;
+           } }
         const responseChunks = splitResponse(response);
+
         for (const chunk of responseChunks) {
           await message.reply(chunk);
         }
@@ -54,7 +65,7 @@ client.on('messageCreate', async (message) => {
       if(!message.mentions.users.has(client.user.id)) return;
       else {
         const userId = message.author.id;
-        message.reply(`Hey there, @${userId} how can I help you?`)
+        await message.reply(`Hey there, @${userId} how can I help you?`)
         // generate response from gemini api
         const prompt = message.content;
         let localPath = null;
@@ -90,7 +101,16 @@ client.on('messageCreate', async (message) => {
                 } else {
                   // File size is within limit, proceed with runGeminiVision
                   try {
-                    const result = await runGeminiVision(prompt, localPath, mimeType);
+                    const result = await runGeminiVision(prompt, localPath, mimeType, currentKeyIndex);
+                    apiCallCount++;
+                    // If the API call count reaches 60, switch to the next key
+                    if (apiCallCount >= 60) {
+                      currentKeyIndex++;
+                      apiCallCount = 0;
+                     // If the current key index exceeds the length of the keys array, reset it to 0
+                      if (currentKeyIndex >= geminiApiKeys.length) {
+                        currentKeyIndex = 0;
+                       } }
                     const responseChunks = splitResponse(result);
                     for (const chunk of responseChunks) {
                       await message.reply(chunk);
@@ -105,7 +125,16 @@ client.on('messageCreate', async (message) => {
           });
         }else{
           try{
-            const result = await runGeminiPro(prompt);
+            const result = await runGeminiPro(prompt, currentKeyIndex);
+            apiCallCount++;
+            // If the API call count reaches 60, switch to the next key
+            if (apiCallCount >= 60) {
+              currentKeyIndex++;
+              apiCallCount = 0;
+             // If the current key index exceeds the length of the keys array, reset it to 0
+              if (currentKeyIndex >= geminiApiKeys.length) {
+                currentKeyIndex = 0;
+               } }
             const responseChunks = splitResponse(result);
             for (const chunk of responseChunks) {
               await message.reply(chunk);

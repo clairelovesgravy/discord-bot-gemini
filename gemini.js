@@ -1,12 +1,13 @@
+require('dotenv').config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const https = require('https');
 const fs = require('fs');
 
-// Access your API key as an environment variable (see "Set up your API key" above)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const geminiApiKeys = process.env.GEMINI_API_KEYS.split(',');
 
 // For text-only input, use the gemini-pro model
-async function runGeminiPro (prompt) {
+async function runGeminiPro (prompt,index) {
+  // Access your API key as an environment variable (see "Set up your API key" above)
+  const genAI = new GoogleGenerativeAI(geminiApiKeys[index]);
   // For text-only input, use the gemini-pro model
   const model = genAI.getGenerativeModel({ model: "gemini-pro"});
   const result = await model.generateContent(prompt);
@@ -27,7 +28,9 @@ function fileToGenerativePart(path, mimeType) {
   };
 }
 
-async function runGeminiVision(prompt,path,mimeType) {
+async function runGeminiVision(prompt,path,mimeType,index) {
+  // Access your API key as an environment variable (see "Set up your API key" above)
+  const genAI = new GoogleGenerativeAI(geminiApiKeys[index]);
   // For text-and-image input (multimodal), use the gemini-pro-vision model
   const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
   const imageParts = [
@@ -40,4 +43,4 @@ async function runGeminiVision(prompt,path,mimeType) {
   return text;
 }
 
-module.exports = { runGeminiPro, runGeminiVision}
+module.exports = { runGeminiPro, runGeminiVision, geminiApiKeys}
